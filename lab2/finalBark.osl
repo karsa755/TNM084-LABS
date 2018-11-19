@@ -1,0 +1,28 @@
+shader bark (
+color color_1 = color(0.392157, 0.443137, 0.329412) [[string label = "color 1"]],
+color color_2 = color(0.815686, 0.815686, 0.87451) [[string label = "color 2"]],
+float colorRatio = 0.4 [[string label = "ratio between colors", float min = 0.0, float max = 0.8]],
+float stepWidth = 0.35 [[string label = "step width for colors", float min = 0.0, float max = 0.5]],
+float size = 5.0 [[string label = "size for colors", float min = 0.0]],
+
+float barkSize = 0.15 [[string label = "size of bark", float min = 0.0, float max = 0.5]],
+float barkDepth = 0.5 [[string label = "bark depth", float min = 0.0, float max = 1.0]],
+
+output float barkPattern = 0.0 [[string label = "bark pattern"]],
+output color diffuseColor = 0.0 [[string label = "diffuse color"]]
+)
+{
+	
+ //color pattern
+ float spotNoise = noise("simplex", P/ size) + 0.5 * noise("simplex", 4*P / size) + 
+ + 0.25 * noise("simplex", 8*P / size) + 0.125 * noise("simplex", 16*P/size);
+ float spotSaw = 2.0 * abs(mod(spotNoise, 1.0)-0.5);
+ float variation = smoothstep(colorRatio-stepWidth,colorRatio + stepWidth, spotSaw);
+ diffuseColor = mix(color_1, color_2, variation); //mix the colors
+ diffuseColor = diffuseColor;
+ 
+ //bark pattern
+ float barkNoise =  noise(u*7 / barkSize, v*0.4 / barkSize);
+ barkPattern =  aastep(barkDepth, barkNoise) + noise("simplex",P*25)*0.125;
+ 
+}
