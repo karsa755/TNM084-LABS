@@ -62,7 +62,7 @@
 #endif
 
 // File names for a mesh model, a texture file and the two shaders
-#define TEXTUREFILENAME PATH "textures/earth2048.tga"
+#define TEXTUREFILENAME PATH "textures/pyramid.tga"
 #define MESHFILENAME PATH "meshes/trex.obj"
 #define VERTEXSHADERFILENAME PATH "vertexshader.glsl"
 #define FRAGMENTSHADERFILENAME PATH "fragmentshader.glsl"
@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
 	triangleSoup myShape;
 	
     GLuint programObject; // Our single shader program
-    Texture texture;
-	GLint location_time, location_MV, location_P, location_tex;
+    Texture texture, texture2;
+	GLint location_time, location_MV, location_P, location_tex, location_tex2;
 
     float time;
 	double fps = 0.0;
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
 
 	// Create geometry for rendering
 	soupInit(&myShape); // Initialize all fields to zero
-	soupCreateSphere(&myShape, 1.0, 50); // A latitude-longitude sphere mesh
+	soupCreateSphere(&myShape, 1.0, 1000); // A latitude-longitude sphere mesh
 	//soupReadOBJ(&myShape, MESHFILENAME); // A triangle mesh from an OBJ file
 	soupPrintInfo(myShape);
 
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
 	glEnable(GL_TEXTURE_2D);
 	// Load a texture from a TGA file
 	createTexture(&texture, TEXTUREFILENAME);
-
+	
 	// Create a shader program object from GLSL code in two files
 	programObject = createShader(VERTEXSHADERFILENAME, FRAGMENTSHADERFILENAME);
 
@@ -219,6 +219,7 @@ int main(int argc, char *argv[]) {
 		// Tell the shader that we are using texture unit 0
 		if ( location_tex != -1 ) {
              glUniform1i ( location_tex , 0);
+             
 		}
 
 		// Update the uniform time variable
